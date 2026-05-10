@@ -120,7 +120,7 @@ int check_similarity(Trie *a, Trie *b) {
   remove_conjunctions(b);
   remove_pronouns(b);
   remove_stopwords(b);
-  return (int)(calculateJaccard(a, b) * 100); // Return percentage
+  return (int)(calculateJaccard(a, b) * 100); 
 }
 
 TopWords topic(Trie *trie) {
@@ -163,7 +163,7 @@ void help_travers_2(Trie_node *node, char *word, int i, char **res, int *k) {
     word[i] = '\0';
     res[(*k)++] = strdup(word);
     if (*k >= 1000)
-      return; // Stop if we've reached the limit
+      return; 
   }
   for (int j = 0; j < 26; j++) {
     if (node->children[j] != NULL) {
@@ -182,13 +182,13 @@ char **words_start_with(Trie *trie, char *s) {
     return NULL;
   }
   char **words =
-      malloc(sizeof(char *) * 1001); // 1001 to include NULL terminator
+      malloc(sizeof(char *) * 1001); 
   int k = 0;
   char word[256];
   strcpy(word, s);
   int size = strlen(s);
   help_travers_2(node, word, size, words, &k);
-  words[k] = NULL; // NULL-terminate the array
+  words[k] = NULL;
   return words;
 }
 
