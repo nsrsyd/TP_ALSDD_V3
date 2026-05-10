@@ -70,7 +70,7 @@ char** sentences_start_with_S(Trie_S* trie, char* s) {
     if (!trie || !trie->Root || !s) return NULL;
     Trie_node_S* node = go_to_S(trie, s);
     if (!node) return NULL;
-    char** words = malloc(sizeof(char*) * 1001); // Include NULL terminator
+    char** words = malloc(sizeof(char*) * 1001); 
     int k = 0;
     char sentence[1000];
     strcpy(sentence, s);
