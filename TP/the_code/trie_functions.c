@@ -4,7 +4,7 @@
 #include <string.h>
 
 Trie *create_trie() {
-  Trie *trie = malloc(sizeof(Trie));
+  Trie *trie = malloc(sizeof(Trie)); 
   if (trie) {
     trie->Root = create_trie_node();
   }
@@ -29,22 +29,22 @@ Trie_node *create_trie_node() {
 
 void insert(Trie *trie, char *s, int count) {
   if (trie == NULL || trie->Root == NULL || s == NULL || *s == '\0') {
-    return;
+    return; // if the words is empty or the trie or its root does not even exist , we quit.
   }
   Trie_node *curr = trie->Root;
-  int size = strlen(s);
+  int size = strlen(s); 
   int index;
   for (int i = 0; i < size; i++) {
-    index = s[i] - 'a';
+    index = s[i] - 'a'; // to get the index of the node that we need to go to .
     if (index < 0 || index >= 26)
       continue; // Safety check
     if (curr->children[index] == NULL) {
-      curr->children[index] = create_trie_node();
+      curr->children[index] = create_trie_node(); // if the node in that index does not exit (which mean the path does not exist , we creat one) we creat a node.
     }
-    curr = curr->children[index];
+    curr = curr->children[index]; // we move to the node of the next letter.
   }
-  curr->is_end_of_word = true;
-  curr->count += count;
+  curr->is_end_of_word = true; // after rueaching the end of the word we insert it by putting the field is_end_of_word True (this mean that the sum of all letter until this node (the path) is a valid word)
+  curr->count += count; // we increament the number of the appearances of the word by one.
 }
 
 bool search(Trie *trie, char *s) {
@@ -57,13 +57,13 @@ bool search(Trie *trie, char *s) {
   for (int i = 0; i < size; i++) {
     index = s[i] - 'a';
     if (index < 0 || index >= 26)
-      return false;
+      return false; // we quit if we encounter a non alphabitical char.
     if (curr->children[index] == NULL) {
-      return false;
+      return false; // if the node does not exist , this mean that the path to that word does not exist which mean that the word was not been inserted to the trie .
     }
-    curr = curr->children[index];
+    curr = curr->children[index]; // we move to the node of the next char in the word.
   }
-  return curr->is_end_of_word;
+  return curr->is_end_of_word; // if is_end_of_word is true , this mean that the word exists in the trie , if not , this mean the opposite.
 }
 
 bool has_children(Trie_node *node) {
@@ -72,45 +72,45 @@ bool has_children(Trie_node *node) {
   }
   for (int i = 0; i < 26; i++) {
     if (node->children[i] != NULL) {
-      return true;
+      return true; // if we find just one non NULL node , this mean that a child exists , so we return True directly
     }
   }
-  return false;
+  return false; // if we reach this line , this mean that all the pointers array is NULLs , so no child exists.
 }
 
 Trie_node *help_delete_word(Trie_node *root, char *s, int i) {
   if (!root)
     return NULL;
 
-  if (s[i] == '\0') {
+  if (s[i] == '\0')  { // this is the base case
     if (root->is_end_of_word) {
-      root->is_end_of_word = false;
+      root->is_end_of_word = false; // if we reach the end of the word we set the boolean to false to indicat that the word does not exist in the trie anymore.
     }
 
     if (!has_children(root)) {
-      free(root);
-      return NULL;
+      free(root); // if the node does not have any child , we free it directly beacuse this will not affect anything (any path to a word) and we dont need the node anymore.
+      return NULL; // after freeing the node , we return NULL to assign it to its index in the pointers array of its parent .
     }
-    return root;
-  }
+    return root; // if the node has children , we do not free it and return its address directly , so its parent is still having that node as a child .
+  } // all this will work just in the node of the last char.
 
-  int index = s[i] - 'a';
+  int index = s[i] - 'a'; // this for getting the index of the next node that we are goin to.
   if (index >= 0 && index < 26) {
-    root->children[index] = help_delete_word(root->children[index], s, i + 1);
+    root->children[index] = help_delete_word(root->children[index], s, i + 1); // recusive call of the function for the traversing .
   }
 
   if (!has_children(root) && !root->is_end_of_word) {
-    free(root);
-    return NULL;
+    free(root); // if the node does not have any child and it is not the end of a word , we free it because we don't need it
+    return NULL; // the same as before.
   }
 
   return root;
 }
 
 void delete_word(Trie_node **root, char *s) {
-  if (root == NULL || *root == NULL || s == NULL)
+  if (root == NULL || *root == NULL || s == NULL) 
     return;
-  *root = help_delete_word(*root, s, 0);
+  *root = help_delete_word(*root, s, 0); // this will handle everything.
 }
 
 void help_free_trie(Trie_node *node) {
@@ -118,19 +118,19 @@ void help_free_trie(Trie_node *node) {
     return;
   }
   for (int i = 0; i < 26; i++) {
-    if (node->children[i] != NULL) {
-      help_free_trie(node->children[i]);
+    if (node->children[i] != NULL) { // if node->children[i] == NULL , we dont need to call the function , because there is nothing to free.
+      help_free_trie(node->children[i]); // we move to the existing nodes to free them.
     }
   }
-  free(node);
+  free(node); // we start freeing from the bottom of the trie like postorder.
 }
 
 void free_Trie(Trie *trie) {
   if (trie == NULL) {
     return;
   }
-  help_free_trie(trie->Root);
-  free(trie);
+  help_free_trie(trie->Root); // this will handle everything.
+  free(trie); // finally we free the complete struture of
 }
 
 bool start_with(Trie *trie, char *s) {
