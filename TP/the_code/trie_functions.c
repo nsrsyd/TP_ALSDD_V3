@@ -148,35 +148,35 @@ bool start_with(Trie *trie, char *s) {
     }
     curr = curr->children[index];
   }
-  return true;
+  return true; // the whole function just searches of the word s.
 }
 
 void help_top_three(Trie_node *node, char *word, int i, TopWords *tw) {
   if (node == NULL) return;
-  if (node->is_end_of_word) {
+  if (node->is_end_of_word) { // if we find a new word we check the following
     word[i] = '\0';
     int c = node->count;
-    if (c > tw->count1) {
+    if (c > tw->count1) { // if the number of its appearances is bigger than the appearances of the current max we apply a shift for the whole chain of the three words
       strcpy(tw->word3, tw->word2); 
       tw->count3 = tw->count2;
       strcpy(tw->word2, tw->word1); 
       tw->count2 = tw->count1;
       strcpy(tw->word1, word);      
       tw->count1 = c;
-    } else if (c > tw->count2) {
+    } else if (c > tw->count2) { // else , if its appearances is bigger than the appearances of the current second max we apply a shift for the chain of the last two words
       strcpy(tw->word3, tw->word2); 
       tw->count3 = tw->count2;
       strcpy(tw->word2, word);      
       tw->count2 = c;
-    } else if (c > tw->count3) {
-      strcpy(tw->word3, word);      
+    } else if (c > tw->count3) {  // else , if its appearances is bigger than the appearances of the current third max we replace the third max by this word.
+      strcpy(tw->word3, word); 
       tw->count3 = c;
     }
   }
   for (int j = 0; j < 26; j++) {
     if (node->children[j] != NULL) {
-      word[i] = 'a' + j;
-      help_top_three(node->children[j], word, i + 1, tw);
+      word[i] = 'a' + j; // this is for adding the char of the current node to the curent word that we are buiding (we construct the word using the path that we are traversing)
+      help_top_three(node->children[j], word, i + 1, tw); // the recursive traversing
     }
   }
 }
@@ -194,14 +194,14 @@ void help_print_words(Trie_node *root, char *word, int j) {
   if (root == NULL) {
     return;
   }
-  if (root->is_end_of_word) {
-    word[j] = '\0';
-    printf(" %s ", word);
+  if (root->is_end_of_word) { // this mean that we find the end of a complete word so our current word is a valid word.
+    word[j] = '\0'; // we add this to tell the compiler that this is the end of a string.
+    printf(" %s ", word); 
   }
   for (int i = 0; i < 26; i++) {
     if (root->children[i] != NULL) {
-      word[j] = 'a' + i;
-      help_print_words(root->children[i], word, j + 1);
+      word[j] = 'a' + i; // for constructing the word
+      help_print_words(root->children[i], word, j + 1); 
     }
   }
 }
@@ -212,6 +212,6 @@ void print_words(Trie *trie) {
   }
   char word[100];
   printf("{ ");
-  help_print_words(trie->Root, word, 0);
+  help_print_words(trie->Root, word, 0); // this will handle everything.
   printf(" }");
 }
