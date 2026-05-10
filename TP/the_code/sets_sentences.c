@@ -3,9 +3,11 @@
 #include <string.h>
 
 #define MAX_SENTENCES 100000
-
-static int min_S(int a, int b) {
-  return (a < b) ? a : b;
+// everything is the same as words (in term of the logic) , the diffrance is just handling the other new chars (the space , : ;)
+int min_S(int a, int b) {
+  if (a>b) {
+    return b;}
+  return a;
 }
 
 void copying_trie_S(Trie_node_S *node, char *sentence, int i,
