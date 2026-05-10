@@ -131,6 +131,7 @@ Trie_S *file_get_trie_by_pos_S(file_S *f, int n) {
   return para_get_trie_S(p);
 }
 
+// Return the number of paragraphs in the queue.
 int file_count_S(file_S *f) {
   if (f == NULL) return 0;
   para_S *p = f->head;
