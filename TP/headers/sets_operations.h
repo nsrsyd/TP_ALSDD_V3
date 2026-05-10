@@ -10,4 +10,4 @@ void help_traverse_diff(Trie_node *node1, Trie_node *node2, Trie *trie, char *wo
 Trie *difference(Trie *t1, Trie *t2);
 Trie *copy_trie(Trie *trie);
 
-#endif // SETS_OPERATIONS_H
+#endif 
