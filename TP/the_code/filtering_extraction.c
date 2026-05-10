@@ -110,6 +110,7 @@ void remove_pronouns(Trie *trie) {
   }
 }
 
+// operates on copies — does not modify caller's tries
 int check_similarity(Trie *a, Trie *b) {
   if (a == NULL || a->Root == NULL || b == NULL || b->Root == NULL) {
     return 0;
