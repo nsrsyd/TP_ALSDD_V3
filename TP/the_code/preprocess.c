@@ -10,6 +10,7 @@ void to_lower_string(char *str) {
     }
 }
 
+// preserves alpha, whitespace, and sentence delimiters; collapses everything else to space
 void sanitize_text(char *str) {
     if (str == NULL) return;
     int i = 0, j = 0;
