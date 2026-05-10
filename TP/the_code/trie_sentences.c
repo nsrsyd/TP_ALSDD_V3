@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+// everything is the same as words (in term of the logic) , the diffrance is just handling the other new chars (the space , : ;)
 void prep_trie_node_S(Trie_node_S *node) {
   if (!node)
     return;
