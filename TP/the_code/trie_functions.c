@@ -151,21 +151,26 @@ bool start_with(Trie *trie, char *s) {
   return true;
 }
 
-static void help_top_three(Trie_node *node, char *word, int i, TopWords *tw) {
+void help_top_three(Trie_node *node, char *word, int i, TopWords *tw) {
   if (node == NULL) return;
   if (node->is_end_of_word) {
     word[i] = '\0';
     int c = node->count;
     if (c > tw->count1) {
-      /* shift 1→2, 2→3 */
-      strcpy(tw->word3, tw->word2); tw->count3 = tw->count2;
-      strcpy(tw->word2, tw->word1); tw->count2 = tw->count1;
-      strcpy(tw->word1, word);      tw->count1 = c;
+      strcpy(tw->word3, tw->word2); 
+      tw->count3 = tw->count2;
+      strcpy(tw->word2, tw->word1); 
+      tw->count2 = tw->count1;
+      strcpy(tw->word1, word);      
+      tw->count1 = c;
     } else if (c > tw->count2) {
-      strcpy(tw->word3, tw->word2); tw->count3 = tw->count2;
-      strcpy(tw->word2, word);      tw->count2 = c;
+      strcpy(tw->word3, tw->word2); 
+      tw->count3 = tw->count2;
+      strcpy(tw->word2, word);      
+      tw->count2 = c;
     } else if (c > tw->count3) {
-      strcpy(tw->word3, word);      tw->count3 = c;
+      strcpy(tw->word3, word);      
+      tw->count3 = c;
     }
   }
   for (int j = 0; j < 26; j++) {
