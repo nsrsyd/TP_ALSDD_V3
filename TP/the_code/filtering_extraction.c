@@ -10,9 +10,9 @@ void help_traverse_num(Trie_node *node, int *cpt) {
     return;
   }
   if (node->is_end_of_word) {
-    (*cpt) += node->count;
+    (*cpt) += node->count; // after we find a word , we add the number of its appearances to the total counter
   }
-  for (int j = 0; j < 26; j++) {
+  for (int j = 0; j < 26; j++) { // traversing as usual , all trie functions have this bloque of code in common , so i dont need to explain it again.
     if (node->children[j] != NULL) {
       help_traverse_num(node->children[j], cpt);
     }
@@ -24,7 +24,7 @@ int num_of_words(Trie *A) {
     return 0;
   }
   int cpt = 0;
-  help_traverse_num(A->Root, &cpt);
+  help_traverse_num(A->Root, &cpt); // it is obvious i think.
   return cpt;
 }
 
@@ -36,11 +36,11 @@ double calculateJaccard(Trie *a, Trie *b) {
 
   double result = 0.0;
   if (n2 != 0) {
-    result = (double)n1 / (double)n2;
+    result = (double)n1 / (double)n2; // we use double for better accurucy and percision.
   }
 
-  free_Trie(unionn);
-  free_Trie(inter);
+  free_Trie(unionn); // to prevent a memory leak.
+  free_Trie(inter); // to prevent a memory leak.
   return result;
 }
 
@@ -61,11 +61,11 @@ void remove_stopwords(Trie *trie) {
       "over", "after", "before", "between", "under", "such",
       "each", "every", "all",  "any",    "both",   "few",
       "more", "most", "other", "some",   "only",   "also",
-      "how",  "when", "where", "why",    "what",   "there"
+      "how",  "when", "where", "why",    "what",   "there" 
   };
   int num_stopwords = sizeof(stopwords) / sizeof(stopwords[0]);
   for (int i = 0; i < num_stopwords; i++) {
-    delete_word(&(trie->Root), (char *)stopwords[i]);
+    delete_word(&(trie->Root), (char *)stopwords[i]); // we delete all this words if we need to check something related the meaning , this words will anoy us.
   }
 }
 
@@ -85,7 +85,7 @@ void remove_conjunctions(Trie *trie) {
   for (int i = 0; i < num_conjunctions; i++) {
     delete_word(&(trie->Root), (char *)conjunctions[i]);
   }
-}
+} // the same as before
 
 void remove_pronouns(Trie *trie) {
   if (trie == NULL || trie->Root == NULL) {
@@ -102,13 +102,13 @@ void remove_pronouns(Trie *trie) {
       "anybody",  "anyone",   "anything",
       "everybody", "everyone", "everything",
       "nobody",  "nothing",  "somebody",  "someone", "something",
-      "these",   "those"
+      "these",   "those" 
   };
   int num_pronouns = sizeof(pronouns) / sizeof(pronouns[0]);
   for (int i = 0; i < num_pronouns; i++) {
     delete_word(&(trie->Root), (char *)pronouns[i]);
   }
-}
+} // the same as before.
 
 int check_similarity(Trie *a, Trie *b) {
   if (a == NULL || a->Root == NULL || b == NULL || b->Root == NULL) {
@@ -120,7 +120,7 @@ int check_similarity(Trie *a, Trie *b) {
   remove_conjunctions(b);
   remove_pronouns(b);
   remove_stopwords(b);
-  return (int)(calculateJaccard(a, b) * 100); 
+  return (int)(calculateJaccard(a, b) * 100); // to check the simmilarity in terms of the meaning (just words that has a meaning)
 }
 
 TopWords topic(Trie *trie) {
@@ -132,7 +132,7 @@ TopWords topic(Trie *trie) {
   remove_conjunctions(trie);
   remove_pronouns(trie);
   remove_stopwords(trie);
-  return top_three_words(trie);
+  return top_three_words(trie); // to get to most three used words (words that has a meaning)
 }
 
 Trie_node *go_to(Trie *trie, char *root) {
@@ -152,7 +152,7 @@ Trie_node *go_to(Trie *trie, char *root) {
       curr = curr->children[index];
     }
   }
-  return curr;
+  return curr; // this is just a normal traversing as before .
 }
 
 void help_travers_2(Trie_node *node, char *word, int i, char **res, int *k) {
@@ -161,14 +161,14 @@ void help_travers_2(Trie_node *node, char *word, int i, char **res, int *k) {
   }
   if (node->is_end_of_word) {
     word[i] = '\0';
-    res[(*k)++] = strdup(word);
-    if (*k >= 1000)
+    res[(*k)++] = strdup(word); // we add the word to the array of words. then we increment the index k.
+    if (*k >= 1000) 
       return; 
   }
   for (int j = 0; j < 26; j++) {
     if (node->children[j] != NULL) {
       word[i] = 'a' + j;
-      help_travers_2(node->children[j], word, i + 1, res, k);
+      help_travers_2(node->children[j], word, i + 1, res, k); // same as always.
     }
   }
 }
@@ -177,7 +177,7 @@ char **words_start_with(Trie *trie, char *s) {
   if (trie == NULL || trie->Root == NULL || s == NULL) {
     return NULL;
   }
-  Trie_node *node = go_to(trie, s);
+  Trie_node *node = go_to(trie, s); // this for moving to the node that all the nodes below it starts with that prefix/
   if (node == NULL) {
     return NULL;
   }
@@ -187,7 +187,7 @@ char **words_start_with(Trie *trie, char *s) {
   char word[256];
   strcpy(word, s);
   int size = strlen(s);
-  help_travers_2(node, word, size, words, &k);
+  help_travers_2(node, word, size, words, &k); // we collect all the words belowe that node , all these words are gurented to start with that prefix
   words[k] = NULL;
   return words;
 }
@@ -215,7 +215,7 @@ int countPrefixMatches(Trie *trie, char *prefix) {
     return 0;
   }
   int cpt = 0;
-  helper_count(node, &cpt);
+  helper_count(node, &cpt); // same as befor , but instead of collecting the words, we just count how many of them.
   return cpt;
 }
 
@@ -226,19 +226,19 @@ void get_min_max_word(Trie_node *node, char *min_word, char *max_word,
   if (node == NULL || max == NULL || min == NULL) {
     return;
   }
-  if (node->is_end_of_word) {
-    (*num_unique_words)++;
-    (*num_words) += node->count;
-    if ((node->count) > (*max)) {
+  if (node->is_end_of_word) { // if we find a complete word
+    (*num_unique_words)++; // we increament the number the unique words/
+    (*num_words) += node->count;// we increament the number of the total used words.
+    if ((node->count) > (*max)) { // if it has a count bigger than the max , then it is the new max.
       word[i] = '\0';
       strcpy(max_word, word);
       (*max) = node->count;
     }
-    if ((node->count) < (*min)) {
+    if ((node->count) < (*min)) {// if it has a count less than the min , then it is the new min.
       if (word[i] != '\0') {
-        word[i] = '\0';
+        word[i] = '\0'; // if there word was not a max we need to add this to ensure the end of a string for the complire to understand that it is aa end of a string.
       }
-      strcpy(min_word, word);
+      strcpy(min_word, word); // for copying the word/
       (*min) = node->count;
     }
   }
@@ -246,7 +246,7 @@ void get_min_max_word(Trie_node *node, char *min_word, char *max_word,
     if (node->children[j] != NULL) {
       word[i] = 'a' + j;
       get_min_max_word(node->children[j], min_word, max_word, word, i + 1, max,
-                       min, num_words, num_unique_words);
+                       min, num_words, num_unique_words); // as before.
     }
   }
 }
