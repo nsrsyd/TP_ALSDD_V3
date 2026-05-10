@@ -1,3 +1,5 @@
+// queue (file) + linked_list (para) abstract machine
+
 #include "../headers/file_structure.h"
 #include "../headers/trie_machine_abstract.h"
 #include <stdlib.h>
@@ -51,9 +53,9 @@ int file_is_empty(file *f) {
   return f->head == NULL;
 }
 
-Trie *file_get_trie_by_pos(file *f, int n) {     // pos is 1-indexed 
-  if (file_is_empty(f)) return NULL;
-  para *p = f->head;
+Trie *file_get_trie_by_pos(file *f, int n) {      // 1-indexed 
+  if (file_is_empty(f)) return NULL;             // returns NULL if n 
+  para *p = f->head;                            // exceeds para count
   int i = 1;
   while (p != NULL && i < n) {
     p = para_get_next(p);
@@ -95,7 +97,7 @@ void free_file(file *file) {
   free(file);
 }
 
-void file_enqueue_para(file *f, char *text, int nb) {
+void file_enqueue_para(file *f, char *text, int nb) { 
   if (f == NULL || text == NULL) return;
   char word[1000];
   int j = 0;
@@ -106,8 +108,8 @@ void file_enqueue_para(file *f, char *text, int nb) {
   for (int i = 0; i < nb; i++) {
     int next_i = i + 1;
     while (next_i < nb && text[next_i] == '\r') next_i++;
-    if (text[i] == '\n' && next_i < nb && text[next_i] == '\n') {
-      if (j > 0) {
+    if (text[i] == '\n' && next_i < nb && text[next_i] == '\n') {  // paragraphs delimited by \n\n
+      if (j > 0) {                                                
         word[j] = '\0';
         insert(para_get_trie(p), word, 1);
         j = 0;
@@ -119,11 +121,11 @@ void file_enqueue_para(file *f, char *text, int nb) {
       f->tail = p;
       i = next_i;
     } 
-    else if (text[i] == ' ' || text[i] == '\n' || text[i] == '\t' ||
-      text[i] == '.' || text[i] == '!' || text[i] == '?') {
+    else if (text[i] == ' ' || text[i] == '\n' || text[i] == '\t' ||      // sentence end chars
+      text[i] == '.' || text[i] == '!' || text[i] == '?') { 
       if (j > 0) {
-        word[j] = '\0';
-        insert(para_get_trie(p), word, 1);
+        word[j] = '\0';                    
+        insert(para_get_trie(p), word, 1);     // copy over (insert) the temporary word to the trie
         j = 0;
       }
     } 
